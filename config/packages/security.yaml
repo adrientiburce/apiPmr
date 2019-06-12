@@ -13,8 +13,12 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
+        register:
+            pattern: ^/api/register$
+            anonymous: true
+
         api_login:
-            pattern: ^/api/login$
+            pattern: ^/api/authenticate
             anonymous: false
             stateless: true
             json_login:
