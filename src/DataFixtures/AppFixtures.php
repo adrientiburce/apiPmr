@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Task;
+use App\Entity\Todos;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -34,12 +35,19 @@ class AppFixtures extends Fixture
             $user->setPassword($hash);
             $user->setPseudo($faker->userName);
 
-            for ($j = 0; $j < mt_rand(1, 5); $j++) {
-                $task = new Task();
-                $task->setName($faker->sentence(3))
-                    ->setChecked(rand(0, 1) == 1 ? true : false)
+            for ($j = 0; $j < mt_rand(1, 3); $j++) {
+                $todo = new Todos();
+                $todo->setName($faker->city)
                     ->setUser($user);
-                $manager->persist($task);
+
+                for ($l = 0; $l < mt_rand(2, 5); $l++) {
+                    $task = new Task();
+                    $task->setName($faker->sentence(3))
+                        ->setChecked(rand(0, 1) == 1 ? true : false)
+                        ->setTodos($todo);
+                    $manager->persist($task);
+                }
+                $manager->persist($todo);
             }
             $manager->persist($user);
         }

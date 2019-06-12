@@ -35,20 +35,22 @@ class User implements UserInterface
      */
     private $password;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Task", mappedBy="user")
-     */
-    private $tasks;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $apiToken;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Todos", mappedBy="user")
+     */
+    private $todos;
+
     public function __construct()
     {
         $this->tasks = new ArrayCollection();
         $this->apiToken = bin2hex(random_bytes(20));
+        $this->todos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -129,24 +131,6 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
-    /**
-     * @return Collection|Task[]
-     */
-    public function getTasks(): Collection
-    {
-        return $this->tasks;
-    }
-
-    public function addTask(Task $task): self
-    {
-        if (!$this->tasks->contains($task)) {
-            $this->tasks[] = $task;
-            $task->setUser($this);
-        }
-
-        return $this;
-    }
-
     public function removeTask(Task $task): self
     {
         if ($this->tasks->contains($task)) {
@@ -168,6 +152,37 @@ class User implements UserInterface
     public function setApiToken(?string $apiToken): self
     {
         $this->apiToken = $apiToken;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Todos[]
+     */
+    public function getTodos(): Collection
+    {
+        return $this->todos;
+    }
+
+    public function addTodo(Todos $todo): self
+    {
+        if (!$this->todos->contains($todo)) {
+            $this->todos[] = $todo;
+            $todo->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTodo(Todos $todo): self
+    {
+        if ($this->todos->contains($todo)) {
+            $this->todos->removeElement($todo);
+            // set the owning side to null (unless already changed)
+            if ($todo->getUser() === $this) {
+                $todo->setUser(null);
+            }
+        }
 
         return $this;
     }
