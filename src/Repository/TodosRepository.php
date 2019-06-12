@@ -19,22 +19,26 @@ class TodosRepository extends ServiceEntityRepository
         parent::__construct($registry, Todos::class);
     }
 
-    // /**
-    //  * @return Todos[] Returns an array of Todos objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findAllByUser($user)
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
+        return $this->createQueryBuilder('todo')
+            ->andWhere('todo.user = :user')
+            ->setParameter('user', $user)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
+
+    public function findOneByUser($id, $user)
+    {
+        return $this->createQueryBuilder('todo')
+            ->andWhere('todo.user = :user')
+            ->setParameter('user', $user)
+            ->andWhere('todo.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 
     /*
     public function findOneBySomeField($value): ?Todos

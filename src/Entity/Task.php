@@ -75,13 +75,8 @@ class Task implements JsonSerializable
 
     public function jsonSerialize()
     {
-        $user = null;
-        if($this->getUser()){
-            $user = $this->getUser()->getPseudo();
-        }
         return array(
             'id' => $this->id,
-            'user' => $user,
             'label' => $this->name,
             'checked' => $this->checked,
         );

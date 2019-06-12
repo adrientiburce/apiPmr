@@ -20,14 +20,17 @@ class TaskRepository extends ServiceEntityRepository
     }
 
 
-    public function findAllByUser($user)
+    public function findOneByUser($idList, $idTask, $user)
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.user = :user')
+        return $this->createQueryBuilder('task')
+            ->andWhere('task.id = :id')
+            ->setParameter('id', $idTask)
+            ->innerJoin('task.todos', 'todoUser', 'WITH', 'todoUser.user = :user')
             ->setParameter('user', $user)
+            ->innerJoin('task.todos', 'todoId', 'WITH', 'todoId.id = :idList')
+            ->setParameter('idList', $idList)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getOneOrNullResult();
     }
 
 
