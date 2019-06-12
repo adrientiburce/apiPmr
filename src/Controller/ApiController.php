@@ -38,10 +38,11 @@ class ApiController extends AbstractController
      */
     public function getAllTask()
     {
-        $tasks = $this->taskRepo->findAll();
+        $user = $this->getUser();
+        $tasks = $this->taskRepo->findAllByUser($user);
 
         return new JsonResponse([
-            'tasks' => $tasks
+            'tasks' => $tasks,
         ], 200);
     }
 
@@ -66,6 +67,7 @@ class ApiController extends AbstractController
      */
     public function createTask(Request $request, ObjectManager $manager): JsonResponse
     {
+        $user = $this->getUser();
         $data = $this->getHeaderOrQueryData($request);
         if($data["name"] == null){
             return new JsonResponse([
@@ -74,7 +76,8 @@ class ApiController extends AbstractController
         }
         $task = new Task();
         $task->setName($data["name"])
-            ->setChecked($data["checked"]);
+            ->setChecked($data["checked"])
+            ->setUser($user);
 
         $manager->persist($task);
         $manager->flush();
@@ -112,11 +115,19 @@ class ApiController extends AbstractController
     public function deleteTask(ObjectManager $manager, $id)
     {
         $task = $this->taskRepo->find($id);
-        if($task == null ){
+        if($task == null){
             return new JsonResponse([
                 'success' => false,
+                'task' => null,
             ], 400);
         }
+        if($this->getUser() != $task->getUser()){
+           return new JsonResponse([
+                'success' => false,
+               'delete' => "Unauthorized",
+            ], 400);
+        }
+
         $manager->remove($task);
         $manager->flush();
 

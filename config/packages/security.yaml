@@ -1,0 +1,33 @@
+security:
+    encoders:
+        App\Entity\User:
+            algorithm: argon2i
+
+    providers:
+        users:
+            entity:
+                class: App\Entity\User
+                property: pseudo
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        api_login:
+            pattern: ^/api/login$
+            anonymous: false
+            stateless: true
+            json_login:
+                check_path: api_login
+
+        api:
+            pattern: ^/api
+            anonymous: false
+            stateless: true
+            guard:
+                authenticators:
+                    - App\Security\ApiAuthenticator
+
+    access_control:
+    # - { path: ^/admin, roles: ROLE_ADMIN }
+    # - { path: ^/profile, roles: ROLE_USER }

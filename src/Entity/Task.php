@@ -27,6 +27,11 @@ class Task implements JsonSerializable
      */
     private $checked;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="tasks")
+     */
+    private $user;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,17 +57,33 @@ class Task implements JsonSerializable
     public function setChecked(bool $checked): self
     {
         $this->checked = $checked;
-
         return $this;
     }
 
     public function jsonSerialize()
     {
+        $user = null;
+        if($this->getUser()){
+            $user = $this->getUser()->getPseudo();
+        }
         return array(
             'id' => $this->id,
+            'user' => $user,
             'name' => $this->name,
             'checked' => $this->checked,
         );
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
     }
 
 }
