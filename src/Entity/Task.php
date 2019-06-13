@@ -33,6 +33,12 @@ class Task implements JsonSerializable
      */
     private $todos;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $url;
+
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -80,6 +86,19 @@ class Task implements JsonSerializable
             'id' => $this->id,
             'label' => $this->name,
             'checked' => $this->checked,
+            'url' => $this->url,
         );
+    }
+
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+
+    public function setUrl(?string $url): self
+    {
+        $this->url = $url;
+
+        return $this;
     }
 }

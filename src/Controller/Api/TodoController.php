@@ -27,7 +27,7 @@ class TodoController extends AbstractController
             return is_array($data) ? $data : array();
         } else {
             return array(
-                "name" => $request->query->get('name'),
+                "label" => $request->query->get('label'),
             );
         }
     }
@@ -96,13 +96,13 @@ class TodoController extends AbstractController
     {
         $user = $this->getUser();
         $data = $this->getHeaderOrQueryData($request);
-        if ($data["name"] == null) {
+        if ($data["label"] == null) {
             return new JsonResponse([
                 'success' => false,
             ], 400);
         }
         $todo = new Todos();
-        $todo->setName($data["name"])
+        $todo->setName($data["label"])
             ->setUser($user);
 
         $manager->persist($todo);
@@ -123,12 +123,12 @@ class TodoController extends AbstractController
         $data = $this->getHeaderOrQueryData($request);
         $todo = $this->todoRepo->findOneByUser($id, $this->getUser());
 
-        if ($todo == null OR !is_string($data['name'])) {
+        if ($todo == null OR !is_string($data['label'])) {
             return new JsonResponse([
                 'success' => false,
             ], 400);
         }
-        $todo->setName($data['name']);
+        $todo->setName($data['label']);
         $manager->flush();
 
         return new JsonResponse([

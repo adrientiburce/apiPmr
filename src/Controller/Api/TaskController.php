@@ -31,8 +31,9 @@ class TaskController extends AbstractController
             return is_array($data) ? $data : array();
         } else {
             return array(
-                "name" => $request->query->get('name'),
-                "checked" => $request->query->get('checked')
+                "label" => $request->query->get('label'),
+                "url" => $request->query->get('url'),
+                "check" => $request->query->get('check'),
             );
         }
     }
@@ -59,7 +60,7 @@ class TaskController extends AbstractController
     public function createTask($id, Request $request, ObjectManager $manager): JsonResponse
     {
         $data = $this->getHeaderOrQueryData($request);
-        if ($data["name"] == null OR $data["checked"] == null) {
+        if ($data['label'] == null) {
             return new JsonResponse([
                 'success' => false,
             ], 400);
@@ -75,9 +76,14 @@ class TaskController extends AbstractController
         }
 
         $task = new Task();
-        $task->setName($data["name"])
-            ->setChecked($data["checked"])
+        $task->setName($data["label"])
+            ->setChecked(0)
             ->setTodos($todo);
+
+        if (preg_match('/^(http|https):\\/\\/[a-z0-9_]+([\\-\\.]{1}[a-z_0-9]+)*\\.[_a-z]{2,5}' . '((:[0-9]{1,5})?\\/.*)?$/i',
+            $data["url"])) {
+            $task->setUrl($data["url"]);
+        }
 
         $manager->persist($task);
         $manager->flush();
@@ -94,7 +100,7 @@ class TaskController extends AbstractController
     public function checkTask(ObjectManager $manager, Request $request, $idList, $idTask)
     {
         $data = $this->getHeaderOrQueryData($request);
-        if ($data["checked"] == null) {
+        if ($data["check"] == null) {
             return new JsonResponse([
                 'success' => false,
             ], 400);
@@ -105,7 +111,13 @@ class TaskController extends AbstractController
                 'success' => false,
             ], 400);
         }
-        $task->setChecked($data["checked"]);
+        if (($data["check"] == 0 OR $data["check"] = 1) AND ($task->getChecked() != $data["check"])) {
+                $task->setChecked(intval($data["check"]));
+        }else{
+            return new JsonResponse([
+                'success' => false,
+            ], 400);
+        }
         $manager->flush();
 
         return new JsonResponse([

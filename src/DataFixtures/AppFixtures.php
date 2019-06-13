@@ -29,21 +29,22 @@ class AppFixtures extends Fixture
 
         $faker = Factory::create('fr_FR');
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 3; $i++) {
             $user = new User();
             $hash = $this->passwordEncoder->encodePassword($user, 'user');
             $user->setPassword($hash);
             $user->setPseudo($faker->userName);
 
-            for ($j = 0; $j < mt_rand(1, 3); $j++) {
+            for ($j = 0; $j < mt_rand(2, 4); $j++) {
                 $todo = new Todos();
                 $todo->setName($faker->city)
                     ->setUser($user);
 
-                for ($l = 0; $l < mt_rand(2, 5); $l++) {
+                for ($l = 0; $l < mt_rand(2, 3); $l++) {
                     $task = new Task();
                     $task->setName($faker->sentence(3))
                         ->setChecked(rand(0, 1))
+                        ->setUrl($faker->url)
                         ->setTodos($todo);
                     $manager->persist($task);
                 }
