@@ -23,7 +23,7 @@ class Task implements JsonSerializable
     private $name;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="integer")
      */
     private $checked;
 
@@ -50,16 +50,17 @@ class Task implements JsonSerializable
         return $this;
     }
 
-    public function getChecked(): ?bool
+    public function getChecked()
     {
         return $this->checked;
     }
 
-    public function setChecked(bool $checked): self
+    public function setChecked($checked): self
     {
         $this->checked = $checked;
         return $this;
     }
+
 
     public function getTodos(): ?Todos
     {

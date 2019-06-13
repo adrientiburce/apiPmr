@@ -3,7 +3,6 @@
 namespace App\Controller\Security;
 
 use App\Entity\User;
-use App\Repository\UserRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -42,7 +41,7 @@ class SecurityController extends AbstractController
         $user = $this->getUser();
 
         return new JsonResponse([
-            'apiToken' => $user->getApiToken(),
+            'hash' => $user->getApiToken(),
             'pseudo' => $user->getPseudo(),
             'roles' => $user->getRoles(),
         ]);

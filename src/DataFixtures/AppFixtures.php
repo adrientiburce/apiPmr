@@ -43,7 +43,7 @@ class AppFixtures extends Fixture
                 for ($l = 0; $l < mt_rand(2, 5); $l++) {
                     $task = new Task();
                     $task->setName($faker->sentence(3))
-                        ->setChecked(rand(0, 1) == 1 ? true : false)
+                        ->setChecked(rand(0, 1))
                         ->setTodos($todo);
                     $manager->persist($task);
                 }

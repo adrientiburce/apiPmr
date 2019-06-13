@@ -28,9 +28,16 @@ class ApiAuthenticator extends AbstractGuardAuthenticator
 
     public function getCredentials(Request $request)
     {
-        return [
-                'apiToken' => $request->headers->get("Authorization"),
-        ];
+        if($request->headers->get("hash") != null){
+            return [
+                'apiToken' => $request->headers->get("hash")
+            ];
+        }else{
+            return [
+                'apiToken' => $request->query->get("hash")
+            ];
+        }
+
     }
 
     public function getUser($credentials, UserProviderInterface $userProvider)
