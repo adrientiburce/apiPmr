@@ -39,7 +39,7 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/api/lists/{idList}/items/{idTask}", methods={"GET"}, requirements={"id"="\d+", "idTask"="\d+"})
+     * @Route("/myapi/lists/{idList}/items/{idTask}", methods={"GET"}, requirements={"id"="\d+", "idTask"="\d+"})
      */
     public function getOneTask($idList, $idTask): JsonResponse
     {
@@ -55,7 +55,7 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/api/lists/{id}/items", methods={"POST"})
+     * @Route("/myapi/lists/{id}/items", methods={"POST"})
      */
     public function createTask($id, Request $request, ObjectManager $manager): JsonResponse
     {
@@ -95,7 +95,7 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/api/lists/{idList}/items/{idTask}", methods={"PUT"})
+     * @Route("/myapi/lists/{idList}/items/{idTask}", methods={"PUT"})
      */
     public function checkTask(ObjectManager $manager, Request $request, $idList, $idTask)
     {
@@ -127,7 +127,7 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/api/lists/{idList}/items/{idTask}", methods={"DELETE"})
+     * @Route("/myapi/lists/{idList}/items/{idTask}", methods={"DELETE"})
      */
     public function deleteTask(ObjectManager $manager, $idList, $idTask)
     {

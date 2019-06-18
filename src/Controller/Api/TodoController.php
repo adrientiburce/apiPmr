@@ -34,7 +34,7 @@ class TodoController extends AbstractController
 
 
     /**
-     * @Route("/api/lists", name="api_get_todos",  methods={"GET"})
+     * @Route("/myapi/lists", name="api_get_todos",  methods={"GET"})
      */
     public
     function getAllTodo()
@@ -48,7 +48,7 @@ class TodoController extends AbstractController
     }
 
     /**
-     * @Route("/api/lists/{id}", methods={"GET"})
+     * @Route("/myapi/lists/{id}", methods={"GET"})
      */
     public
     function getOneTodo($id)
@@ -67,7 +67,7 @@ class TodoController extends AbstractController
     }
 
     /**
-     * @Route("/api/lists/{id}/items", name="api_get_todo", methods={"GET"}, requirements={"id"="\d+"})
+     * @Route("/myapi/lists/{id}/items", name="api_get_todo", methods={"GET"}, requirements={"id"="\d+"})
      */
     public
     function getOneTodoWithItems($id): JsonResponse
@@ -89,7 +89,7 @@ class TodoController extends AbstractController
     }
 
     /**
-     * @Route("/api/lists", name="api_create_todo", methods={"POST"})
+     * @Route("/myapi/lists", name="api_create_todo", methods={"POST"})
      */
     public
     function createTodo(Request $request, ObjectManager $manager): JsonResponse
@@ -115,7 +115,7 @@ class TodoController extends AbstractController
     }
 
     /**
-     * @Route("/api/lists/{id}", methods={"PUT"}, requirements={"id"="\d+"})
+     * @Route("/myapi/lists/{id}", methods={"PUT"}, requirements={"id"="\d+"})
      */
     public
     function updateTodo(ObjectManager $manager, Request $request, $id)
@@ -137,7 +137,7 @@ class TodoController extends AbstractController
     }
 
     /**
-     * @Route("/api/lists/{id}", name="api_todo_delete", methods={"DELETE"})
+     * @Route("/myapi/lists/{id}", name="api_todo_delete", methods={"DELETE"})
      */
     public
     function deleteTodo(ObjectManager $manager, $id)

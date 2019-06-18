@@ -2,17 +2,23 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
+ * @ApiResource(
+ *     normalizationContext={"groups"={"user"}}
+ *   )
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User implements UserInterface, \JsonSerializable
+class User implements UserInterface
 {
     /**
+     * @Groups("user")
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -20,6 +26,7 @@ class User implements UserInterface, \JsonSerializable
     private $id;
 
     /**
+     * @Groups("user")
      * @ORM\Column(type="string", length=180, unique=true)
      */
     private $pseudo;
@@ -48,7 +55,6 @@ class User implements UserInterface, \JsonSerializable
 
     public function __construct()
     {
-        $this->tasks = new ArrayCollection();
         $this->apiToken = bin2hex(random_bytes(20));
         $this->todos = new ArrayCollection();
     }
@@ -77,7 +83,7 @@ class User implements UserInterface, \JsonSerializable
      */
     public function getUsername(): string
     {
-        return (string) $this->pseudo;
+        return (string)$this->pseudo;
     }
 
     /**
@@ -104,7 +110,7 @@ class User implements UserInterface, \JsonSerializable
      */
     public function getPassword(): string
     {
-        return (string) $this->password;
+        return (string)$this->password;
     }
 
     public function setPassword(string $password): self
@@ -129,19 +135,6 @@ class User implements UserInterface, \JsonSerializable
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
-    }
-
-    public function removeTask(Task $task): self
-    {
-        if ($this->tasks->contains($task)) {
-            $this->tasks->removeElement($task);
-            // set the owning side to null (unless already changed)
-            if ($task->getUser() === $this) {
-                $task->setUser(null);
-            }
-        }
-
-        return $this;
     }
 
     public function getApiToken(): ?string
@@ -185,13 +178,5 @@ class User implements UserInterface, \JsonSerializable
         }
 
         return $this;
-    }
-
-    public function jsonSerialize()
-    {
-        return array(
-            'id' => $this->id,
-            'pseudo' => $this->pseudo,
-        );
     }
 }

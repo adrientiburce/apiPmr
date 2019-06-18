@@ -23,7 +23,7 @@ class UserController extends AbstractController
 
 
     /**
-     * @Route("/api/users", methods={"GET"})
+     * @Route("/myapi/users", methods={"GET"})
      */
     public
     function getAllUsers()
@@ -37,7 +37,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/api/users/{id}", methods={"GET"})
+     * @Route("/myapi/users/{id}", methods={"GET"})
      */
     public
     function getOneUser($id)

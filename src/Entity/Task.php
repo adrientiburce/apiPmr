@@ -2,13 +2,18 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
-use JsonSerializable;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TaskRepository")
+ * @ApiResource(
+ *     denormalizationContext={"groups"={"write"}}
+ * )
  */
-class Task implements JsonSerializable
+class Task
 {
     /**
      * @ORM\Id()
@@ -18,6 +23,7 @@ class Task implements JsonSerializable
     private $id;
 
     /**
+     * @Groups("write")
      * @ORM\Column(type="string", length=255)
      */
     private $name;
@@ -28,17 +34,24 @@ class Task implements JsonSerializable
     private $checked;
 
     /**
+     * @Groups("write")
      * @ORM\ManyToOne(targetEntity="App\Entity\Todos", inversedBy="tasks")
      * @ORM\JoinColumn(nullable=false)
      */
     private $todos;
 
     /**
+     * @Groups("write")
+     * @Assert\Regex("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i")
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $url;
 
-    
+    public function __construct()
+    {
+        $this->checked = 0;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -80,16 +93,6 @@ class Task implements JsonSerializable
         return $this;
     }
 
-    public function jsonSerialize()
-    {
-        return array(
-            'id' => $this->id,
-            'label' => $this->name,
-            'checked' => $this->checked,
-            'url' => $this->url,
-        );
-    }
-
     public function getUrl(): ?string
     {
         return $this->url;
@@ -101,4 +104,14 @@ class Task implements JsonSerializable
 
         return $this;
     }
+
+/*    public function jsonSerialize()
+    {
+        return array(
+            'id' => $this->id,
+            'label' => $this->name,
+            'checked' => $this->checked,
+            'url' => $this->url,
+        );
+    }*/
 }

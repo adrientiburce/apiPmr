@@ -2,17 +2,23 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use JsonSerializable;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TodosRepository")
+ * @ApiResource(
+ *     normalizationContext={"groups"={"read"}},
+ *     denormalizationContext={"groups"={"write"}}
+ * )
  */
-class Todos implements JsonSerializable
+class Todos
 {
     /**
+     * @Groups("read")
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -20,16 +26,19 @@ class Todos implements JsonSerializable
     private $id;
 
     /**
+     * @Groups({"read", "write"})
      * @ORM\Column(type="string", length=255)
      */
     private $name;
 
     /**
+     * @Groups("read")
      * @ORM\OneToMany(targetEntity="App\Entity\Task", mappedBy="todos", orphanRemoval=true)
      */
     private $tasks;
 
     /**
+     * @Groups("write")
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="todos")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -96,15 +105,6 @@ class Todos implements JsonSerializable
     public function setUser(?User $user): self
     {
         $this->user = $user;
-
         return $this;
-    }
-
-    public function jsonSerialize()
-    {
-        return array(
-            'id' => $this->id,
-            'label' => $this->name,
-        );
     }
 }
